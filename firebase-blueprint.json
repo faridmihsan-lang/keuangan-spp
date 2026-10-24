@@ -1,0 +1,108 @@
+{
+  "entities": {
+    "Student": {
+      "title": "Student",
+      "description": "Entitas siswa untuk pendataan dan pembayaran SPP bulanan",
+      "type": "object",
+      "properties": {
+        "nis": { "type": "string", "description": "Nomor Induk Siswa unik" },
+        "nisn": { "type": "string", "description": "Nomor Induk Siswa Nasional 10 digit" },
+        "fullName": { "type": "string", "description": "Nama lengkap siswa" },
+        "gender": { "type": "string", "enum": ["L", "P"], "description": "Jenis kelamin: L atau P" },
+        "gradeClass": { "type": "string", "description": "Kelas siswa" },
+        "academicYear": { "type": "string", "description": "Tahun ajaran pendaftaran" },
+        "monthlySppNominal": { "type": "number", "description": "Nominal kewajiban SPP bulanan" },
+        "address": { "type": "string", "description": "Alamat tempat tinggal" },
+        "parentName": { "type": "string", "description": "Nama orang tua atau wali" },
+        "phone": { "type": "string", "description": "Nomor telepon kontak / WA" },
+        "status": { "type": "string", "enum": ["aktif", "tidak_aktif"], "description": "Status keaktifan" },
+        "notes": { "type": "string", "description": "Catatan khusus" },
+        "createdAt": { "type": "string", "description": "Waktu pembuatan ISO" },
+        "updatedAt": { "type": "string", "description": "Waktu pembaruan ISO" }
+      },
+      "required": ["nis", "fullName", "gender", "gradeClass", "academicYear", "monthlySppNominal", "status"]
+    },
+    "Payment": {
+      "title": "Payment",
+      "description": "Catatan transaksi pembayaran SPP bulanan siswa",
+      "type": "object",
+      "properties": {
+        "studentId": { "type": "string", "description": "ID dokumen siswa" },
+        "studentNis": { "type": "string", "description": "NIS siswa" },
+        "studentName": { "type": "string", "description": "Nama siswa" },
+        "gradeClass": { "type": "string", "description": "Kelas siswa" },
+        "academicYear": { "type": "string", "description": "Tahun ajaran" },
+        "month": { "type": "string", "description": "Bulan SPP yang dibayarkan" },
+        "year": { "type": "string", "description": "Tahun pembayaran" },
+        "amount": { "type": "number", "description": "Jumlah yang dibayarkan" },
+        "monthlySppNominal": { "type": "number", "description": "Tarif SPP bulan bersangkutan" },
+        "remainingBalance": { "type": "number", "description": "Sisa tagihan bulan ini" },
+        "paymentDate": { "type": "string", "description": "Tanggal pembayaran" },
+        "paymentMethod": { "type": "string", "description": "Metode pembayaran" },
+        "bankName": { "type": "string", "description": "Nama bank tujuan" },
+        "receiptNumber": { "type": "string", "description": "Nomor bukti kuitansi unik" },
+        "status": { "type": "string", "enum": ["Lunas", "Sebagian", "Menunggu"], "description": "Status pembayaran" },
+        "notes": { "type": "string", "description": "Catatan pembayaran" },
+        "recordedBy": { "type": "string", "description": "Nama petugas pencatat" },
+        "cashTendered": { "type": "number", "description": "Uang tunai diserahkan" },
+        "changeAmount": { "type": "number", "description": "Kembalian kasir" },
+        "createdAt": { "type": "string", "description": "Waktu pencatatan" }
+      },
+      "required": ["studentId", "studentNis", "month", "amount", "paymentDate", "receiptNumber", "status"]
+    },
+    "SchoolSettings": {
+      "title": "SchoolSettings",
+      "description": "Pengaturan identitas sekolah, tarif default, dan konfigurasi kuitansi",
+      "type": "object",
+      "properties": {
+        "schoolName": { "type": "string", "description": "Nama lengkap sekolah" },
+        "npsn": { "type": "string", "description": "Nomor Pokok Sekolah Nasional" },
+        "address": { "type": "string", "description": "Alamat sekolah" },
+        "phone": { "type": "string", "description": "Nomor telepon sekolah" },
+        "email": { "type": "string", "description": "Email resmi sekolah" },
+        "website": { "type": "string", "description": "Website resmi sekolah" },
+        "principalName": { "type": "string", "description": "Nama kepala sekolah" },
+        "principalNip": { "type": "string", "description": "NIP kepala sekolah" },
+        "treasurerName": { "type": "string", "description": "Nama bendahara sekolah" },
+        "treasurerNip": { "type": "string", "description": "NIP bendahara" },
+        "activeAcademicYear": { "type": "string", "description": "Tahun ajaran aktif" },
+        "dueDay": { "type": "number", "description": "Tanggal jatuh tempo SPP tiap bulan" },
+        "receiptPrefix": { "type": "string", "description": "Awalan nomor transaksi kuitansi" },
+        "receiptFooterNote": { "type": "string", "description": "Catatan pada footer kuitansi" },
+        "updatedAt": { "type": "string", "description": "Waktu pembaruan" }
+      }
+    },
+    "ActivityLog": {
+      "title": "ActivityLog",
+      "description": "Log jejak audit aktivitas petugas dalam sistem",
+      "type": "object",
+      "properties": {
+        "action": { "type": "string", "description": "Aksi yang dilakukan" },
+        "module": { "type": "string", "description": "Modul bersangkutan" },
+        "details": { "type": "string", "description": "Rincian aktivitas" },
+        "userName": { "type": "string", "description": "Nama petugas pelaksana" },
+        "userRole": { "type": "string", "description": "Peran petugas" },
+        "timestamp": { "type": "string", "description": "Waktu pencatatan ISO" }
+      },
+      "required": ["action", "module", "userName", "timestamp"]
+    }
+  },
+  "firestore": {
+    "/students/{studentId}": {
+      "schema": "Student",
+      "description": "Koleksi data pokok siswa"
+    },
+    "/payments/{paymentId}": {
+      "schema": "Payment",
+      "description": "Koleksi transaksi riwayat pembayaran SPP"
+    },
+    "/settings/{settingId}": {
+      "schema": "SchoolSettings",
+      "description": "Dokumen konfigurasi dan identitas sekolah"
+    },
+    "/activity_logs/{logId}": {
+      "schema": "ActivityLog",
+      "description": "Jejak audit aktivitas petugas"
+    }
+  }
+}

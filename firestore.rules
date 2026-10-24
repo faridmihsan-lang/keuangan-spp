@@ -1,0 +1,30 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Siswa untuk pendataan SPP
+    match /students/{studentId} {
+      allow read, write: if true;
+    }
+
+    // Riwayat transaksi pembayaran SPP
+    match /payments/{paymentId} {
+      allow read, write: if true;
+    }
+
+    // Pengaturan identitas sekolah dan sistem SPP
+    match /settings/{settingId} {
+      allow read, write: if true;
+    }
+
+    // Log aktivitas pengguna
+    match /activity_logs/{logId} {
+      allow read, write: if true;
+    }
+
+    // Default deny for other collections
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
